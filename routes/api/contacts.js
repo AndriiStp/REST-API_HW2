@@ -6,10 +6,18 @@ const HttpError = require("../../helpers");
 
 const contacts = require("../../models/contacts.js");
 
+const Joi = require("joi");
+
+const schema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+});
+
 router.get("/", async (req, res, next) => {
   try {
     const result = await contacts.listContacts();
-    res.json(result).status(200).json({ message: "200" });
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }
@@ -22,21 +30,37 @@ router.get("/:id", async (req, res, next) => {
     if (!result) {
       throw HttpError(404, "Not Found");
     }
-    res.json(result);
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }
 });
 
 router.post("/", async (req, res, next) => {
-  res.json({ message: "template message" });
+  try {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+    const result = await contacts.addContact(req.body);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put("/:id", async (req, res, next) => {
+  try {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
-});
-
-router.put("/:contactId", async (req, res, next) => {
   res.json({ message: "template message" });
 });
 
