@@ -36,6 +36,9 @@ const updateFavorite = async (req, res, next) => {
   if (!result) {
     throw HttpError(404, "Not Found");
   }
+  if (Object.keys(req.body).length === 0) {
+    throw HttpError(400, "missing field favorite");
+  }
   res.status(200).json(result);
 };
 
