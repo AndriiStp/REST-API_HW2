@@ -30,21 +30,12 @@ const updateById = async (req, res, next) => {
   res.status(200).json(result);
 };
 
-// const updateFavorite = async (req, res, next) => {
-//   const { id } = req.params;
-//   const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
-//   if (!result) {
-//     throw HttpError(404, "Not Found");
-//   }
-//   if (Object.keys(req.body).length === 0) {
-//     throw HttpError(400, "missing field favorite");
-//   }
-//   res.status(200).json(result);
-// };
-
 const updateFavorite = async (req, res, next) => {
   const { id } = req.params;
-  if (!req.body) throw HttpError(400, "missing field favorite");
+  if (!req.body) {
+    throw HttpError(400, "missing field favorite");
+  }
+
   const result = await Contact.findByIdAndUpdate(id, req.body, {
     new: true,
   });
